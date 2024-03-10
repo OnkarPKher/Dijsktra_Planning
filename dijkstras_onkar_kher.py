@@ -90,11 +90,30 @@ class Grid:
                 
                 img[y, x] = [0, 0, 255]  # Red for path
 
-        cv2.imshow("Pathfinding Visualization", img)
+        cv2.imshow("Path-finding Visualization", img)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
+    
+    def visualize_path(self, visited_nodes, came_from, current_node=None):
+        """
+        Visualize the path-finding process, including node exploration and the optimal path 
+        """
+        img = self.grid.copy()
+        #Visualize visited nodes
+        for node in visited_nodes:
+            x, y = node
+            img[y, x] = [0, 255, 0] #Green for visited nodes
+        
+        #Visualize the current node
+        if current_node:
+            x, y = current_node
+            img[y, x] = [255, 0, 0] #Red for the current node
+            
+        
+        cv2.imshow("Exploration and Path", img)
+        cv2.waitKey(1) #Adding a small delay for animation
 
-def dijkstra(grid, start_node, goal_node):
+def dijkstra(grid, start_node, goal_node, visualize = False):
     """
     Dijkstra's algorithm for finding the shortest path from start_node to goal_node.
     """
@@ -102,9 +121,11 @@ def dijkstra(grid, start_node, goal_node):
     open_list.put((0, start_node))
     came_from = {start_node: None}
     cost_so_far = {start_node: 0}
+    visited_nodes = []
 
     while not open_list.empty():
         current_cost, current_node = open_list.get()
+        visited_nodes.append(current_node)
 
         if current_node == goal_node:
             break
@@ -117,6 +138,8 @@ def dijkstra(grid, start_node, goal_node):
                 priority = new_cost
                 open_list.put((priority, next_node))
                 came_from[next_node] = current_node
+        if visualize:
+            grid.visualize_path(visited_nodes, came_from, current_node)
 
     # Reconstruct path
     path = []
@@ -126,9 +149,7 @@ def dijkstra(grid, start_node, goal_node):
         current_node = came_from[current_node]
     path.append(start_node)
     path.reverse()
-    return path
-
-# Example usage
+    return path, visited_nodes
 
 e_shape_vertices = [(900, 450), (1100, 450), (1100, 50), (900, 50), (900, 125),
                     (1020, 125), (1020, 375), (900, 375)]  # Define "E" shape vertices
@@ -151,12 +172,12 @@ start_node = (x1, y1_transformed)   # Transforming the input coordinates
 goal_node = (x2, y2_transformed)
 
 start_time = time.time()
-path = dijkstra(grid, start_node, goal_node)
+path, visited_nodes = dijkstra(grid, start_node, goal_node, visualize = True)
 end_time = time.time()
-
+transformed_path = [(x, grid.height - y) for (x, y) in path]
 if path:
     print("Goal Node Achieved")
-    print("Path:", path)
+    print("Path:", transformed_path)
     print("Time Taken:", end_time - start_time, "seconds")
     grid.visualize(path)
 else:
