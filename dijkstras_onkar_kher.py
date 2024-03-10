@@ -124,8 +124,13 @@ obstacles = [
     Obstacle('triangle', (460, 25, 510, 225, 485, 125))  # Parameters: x1, y1, x2, y2, x3, y3
 ]
 grid = Grid(1200, 500, obstacles)
-start_node = (0, 50)
-goal_node = (1000, 4000)
+x1 = int(input("Please enter the x coordinate of the start node of the point robot, x1: "))
+y1 = int(input("Please enter the y coordinate of the start node of the point robot, y1: "))
+x2 = int(input("Please enter the x coordinate of the goal node of the point robot, x2: "))
+y2 = int(input("Please enter the y coordinate of the goal node of the point robot, y2: "))
+
+start_node = (x1, y1)
+goal_node = (x2, y2)
 
 start_time = time.time()
 path = dijkstra(grid, start_node, goal_node)
