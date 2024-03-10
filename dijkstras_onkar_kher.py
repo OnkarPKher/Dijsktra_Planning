@@ -21,19 +21,29 @@ class Obstacle:
         elif self.shape == 'hexagon':
             x_center, y_center, side = self.params
             return np.abs(x - x_center) / side + np.abs(y - y_center) / (side * np.sqrt(3)/2) <= 1
-        elif self.shape == 'triangle':
-            x1, y1, x2, y2, x3, y3 = self.params
-            # Calculate the area of the triangle
-            area = 0.5 * (-y2 * x3 + y1 * (-x2 + x3) + x1 * (y2 - y3) + x2 * y3)
-            # Ensure the area is non-zero (triangle is not degenerate)
-            if area == 0:
-                return False  # Or raise an error: raise ValueError("Triangle is degenerate.")
-            s = 1 / (2 * area) * (y1 * x3 - x1 * y3 + (y3 - y1) * x + (x1 - x3) * y)
-            t = 1 / (2 * area) * (x1 * y2 - y1 * x2 + (y1 - y2) * x + (x2 - x1) * y)
-            return s > 0 and t > 0 and 1 - s - t > 0
-        # Add more shapes as needed
+        elif self.shape == 'custom_shape':
+            return self.point_in_polygon(x, y)
         else:
             return False
+        
+    def point_in_polygon(self, x, y):
+        polygon = self.params
+        num = len(polygon)
+        inside = False
+
+        p1x, p1y = polygon[0]
+        for i in range(num + 1):
+            p2x, p2y = polygon[i % num]
+            if y > min(p1y, p2y):
+                if y <= max(p1y, p2y):
+                    if x <= max(p1x, p2x):
+                        if p1y != p2y:
+                            xints = (y - p1y) * (p2x - p1x) / (p2y - p1y) + p1x
+                        if p1x == p2x or x <= xints:
+                            inside = not inside
+            p1x, p1y = p2x, p2y
+
+        return inside
 
 class Grid:
     """
@@ -77,6 +87,7 @@ class Grid:
         img = self.grid.copy()
         if path:
             for x, y in path:
+                
                 img[y, x] = [0, 0, 255]  # Red for path
 
         cv2.imshow("Pathfinding Visualization", img)
@@ -118,10 +129,14 @@ def dijkstra(grid, start_node, goal_node):
     return path
 
 # Example usage
+
+e_shape_vertices = [(900, 450), (1100, 450), (1100, 50), (900, 50), (900, 125),
+                    (1020, 125), (1020, 375), (900, 375)]  # Define "E" shape vertices
 obstacles = [
-    Obstacle('rectangle', (100, 0, 150, 100)),  # Parameters: x1, y1, x2, y2
-    Obstacle('hexagon', (300, 125, 75)),       # Parameters: x_center, y_center, side
-    Obstacle('triangle', (460, 25, 510, 225, 485, 125))  # Parameters: x1, y1, x2, y2, x3, y3
+    Obstacle('rectangle', (100, 0, 175, 400)),  # Parameters: x1, y1, x2, y2
+    Obstacle('rectangle', (275, 100, 350, 500)),    # Parameters: x1, y1, x2, y2
+    Obstacle('hexagon', (650, 250, 150)),       # Parameters: x_center, y_center, side
+    Obstacle('custom_shape', e_shape_vertices)  # Adding custom "E" shaped obstacle
 ]
 grid = Grid(1200, 500, obstacles)
 x1 = int(input("Please enter the x coordinate of the start node of the point robot, x1: "))
