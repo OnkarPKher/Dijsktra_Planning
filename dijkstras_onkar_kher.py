@@ -141,7 +141,7 @@ def dijkstra(grid, start_node, goal_node, visualize = False):
         if visualize:
             grid.visualize_path(visited_nodes, came_from, current_node)
 
-    # Reconstruct path
+    # Backtrack the optimal path
     path = []
     current_node = goal_node
     while current_node != start_node:
