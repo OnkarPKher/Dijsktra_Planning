@@ -33,5 +33,5 @@ And similarly for the goal node.
 
 Make sure all dependencies are installed to ensure the script runs successfully.
 
-
+After executing the code, the script will take some time to launch the "Exploration and Path" visualization window, before which it will ask you to input the start node coordinates of the point robot and also the goal node coordinates of the point robot, one at a time. The example of the prompt at the terminal for the user is given above. After the coordinates have been entered theprogram checks whether these are possible to achieve given the obstacles placed as per the project requirement in the custom environment. After all these tasks have been computed, the "Exploration and Path" window which makes the users visualize the nodes explored during the process of finding the optimal path based on the search strategy of the "Dijsktra's Algorithm". After a sufficient amount of nodes have been explored the program then displays another visualization window namely "Path-finding Visualization", which has the optimal path on it, marked with red color. The obstacles are black in color, with the clearance required (5mm) displayed in grey color. The free space is being displayed in white color. The total number of nodes explored will be displayed using green color to mark the nodes that have been explored. 
 
