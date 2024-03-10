@@ -143,9 +143,12 @@ x1 = int(input("Please enter the x coordinate of the start node of the point rob
 y1 = int(input("Please enter the y coordinate of the start node of the point robot, y1: "))
 x2 = int(input("Please enter the x coordinate of the goal node of the point robot, x2: "))
 y2 = int(input("Please enter the y coordinate of the goal node of the point robot, y2: "))
+y1_transformed = 500 - y1
+y2_transformed = 500 - y2
 
-start_node = (x1, y1)
-goal_node = (x2, y2)
+start_node = (x1, y1_transformed)   # Transforming the input coordinates
+# To take coordinates from the user in a coordinate system where the origin lies in the bottom left corner.  
+goal_node = (x2, y2_transformed)
 
 start_time = time.time()
 path = dijkstra(grid, start_node, goal_node)
