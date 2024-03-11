@@ -3,6 +3,20 @@ import cv2
 import time
 from queue import PriorityQueue
 
+def calculate_hexagon_vertices(x_center, y_center, side):
+    """
+    Calculate the vertices of a hexagon given its center and side length.
+    """
+    vertices = []
+    for i in range(6):
+        angle_deg = 60 * i + 30 # Starting with 60 degrees for the first vertex to have a pointed top hexagon
+        angle_rad = np.radians(angle_deg)
+        x = x_center + side * np.cos(angle_rad)
+        y = y_center + side * np.sin(angle_rad)
+        vertices.append((x, y))
+    return vertices
+
+
 class Obstacle:
     """
     Represents an obstacle in the grid.
@@ -10,6 +24,12 @@ class Obstacle:
     def __init__(self, shape, params):
         self.shape = shape
         self.params = params
+        if shape == 'hexagon':
+            # For a hexagon, params should contain (x_center, y_center, side)
+            self.vertices = calculate_hexagon_vertices(*params)
+        elif shape == 'custom_shape':
+            # For custom shapes, assume params directly provides the vertices
+            self.vertices = params
 
     def contains(self, x, y):
         """
@@ -18,19 +38,14 @@ class Obstacle:
         if self.shape == 'rectangle':
             x1, y1, x2, y2 = self.params
             return x1 <= x <= x2 and y1 <= y <= y2
-        elif self.shape == 'hexagon':
-            x_center, y_center, side = self.params
-            return np.abs(x - x_center) / side + np.abs(y - y_center) / (side * np.sqrt(3)/2) <= 1
-        elif self.shape == 'custom_shape':
-            return self.point_in_polygon(x, y)
+        elif self.shape in ['hexagon', 'custom_shape']:
+            return self.point_in_polygon(x, y, self.vertices)
         else:
             return False
-        
-    def point_in_polygon(self, x, y):
-        polygon = self.params
+
+    def point_in_polygon(self, x, y, polygon):
         num = len(polygon)
         inside = False
-
         p1x, p1y = polygon[0]
         for i in range(num + 1):
             p2x, p2y = polygon[i % num]
@@ -42,7 +57,6 @@ class Obstacle:
                         if p1x == p2x or x <= xints:
                             inside = not inside
             p1x, p1y = p2x, p2y
-
         return inside
 
 class Grid:
