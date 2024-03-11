@@ -39,6 +39,8 @@ After the optimal path has been shown on the respective visualization window the
 
 Github repository link: https://github.com/OnkarPKher/Dijsktra_Planning.git
 
-In the video, uploaded the start nodes of the point robot are : x1 = 0, y1 = 100
-and the goal nodes are: x2 = 225, y2 = 150.
+In the video, uploaded the start nodes of the point robot are : x1 = 0, y1 = 100, and
+
+The goal nodes are: x2 = 225, y2 = 150.
+
 The video has been sped up 2x times, to show all the tasks being carried out in lesser amount of time.
