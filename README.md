@@ -38,3 +38,7 @@ After executing the code, the script will take some time to launch the "Explorat
 After the optimal path has been shown on the respective visualization window the terminal also prints out the path taken (optimal path) by the point robot in the user's coordinate system (origin at the bottom left corner), and also prints out the time taken to get and animate that path. To exit the program close both the visualization windows press the exit commands based on your IDE or Code editor software. (Usually `ctrl. + z` or `ctrl. + c`)
 
 Github repository link: https://github.com/OnkarPKher/Dijsktra_Planning.git
+
+In the video, uploaded the start nodes of the point robot are : x1 = 0, y1 = 100
+and the goal nodes are: x2 = 225, y2 = 150.
+The video has been sped up 2x times, to show all the tasks being carried out in lesser amount of time.
